@@ -32,7 +32,7 @@ char macstr[18];
 byte Ethernet::buffer[700];
 static uint32_t timer = 0;
 
-const char website[] PROGMEM = "vz.langhofer.net";
+const char website[] PROGMEM = "temp.brightsky.at";
 
 int LED_LAN_RDY =2;
 int LED_LAN_ROOCESSING =3;
@@ -57,8 +57,8 @@ static void my_callback (byte status, word off, word len) {
 uint16_t values[10];
 uint8_t debounce[10];
 
-String a;
-char b[150];
+
+
 int heartbeat=0;
 
 
@@ -118,12 +118,6 @@ void setup () {
     Serial.println("DNS failed");
     
   ether.printIp("SRV: ", ether.hisip);
-  
- 
-  
-  a = String(mymac[0], HEX) + ":" + String(mymac[1], HEX) + ":" + String(mymac[2], HEX) + 
-  ":" + String(mymac[3], HEX) + ":" +String( mymac[4], HEX) + ":" + String(mymac[5], HEX);
-
 }
 
 
@@ -139,11 +133,7 @@ void loop () {
     
     
     char tosend[100];
-   
-   Serial.println("aaah");
-    Serial.println(a);
-  
-    sprintf(tosend, "?millis=%d&mac=%s", timer, a.c_str());
+    sprintf(tosend, "?millis=%d&mac=%02X:%02X:%02X:%02X:%02X:%02X", timer, mymac[0], mymac[1], mymac[2], mymac[3], mymac[4], mymac[5]);
     
     char str_temp[6];
     
