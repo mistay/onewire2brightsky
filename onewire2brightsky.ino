@@ -44,30 +44,6 @@ int ResetGPIO = A3;
 bool requestPending=false;
 int heartbeatreset = 0;
 
-/*
-void displaystuff(char* releasedetails, char* ipaddress, char* macaddress)   {                
-  // by default, we'll generate the high voltage from the 3.3v line internally! (neat!)
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);  // initialize with the I2C addr 0x3C (for the 128x32)
-  // init done
-  
-  // Clear the buffer.
-  display.clearDisplay();
-
-
-  // text display tests
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.println(releasedetails);
-  display.println(ipaddress);
-  display.setTextSize(2);
-  display.println(macaddress);
-  display.display();
-  delay(2000);
-}
-*/
-
-
 static void my_callback (byte status, word off, word len) {
   requestPending=false;
   
@@ -81,8 +57,8 @@ static void my_callback (byte status, word off, word len) {
 uint16_t values[10];
 uint8_t debounce[10];
 
-String a,c;
-
+String a;
+char b[150];
 int heartbeat=0;
 
 
@@ -94,43 +70,6 @@ void setup () {
   
   Serial.begin(115200);
   Serial.println(F("\nonewire2brightsky v20170208 starting..."));
-  
-  
-  
-  
-  //displaystuff("s0vz v2 build 1702", "192.168.2.3", "13:22:23:12:23:42");
- 
-  
-  pinMode(4, INPUT_PULLUP);
-  pinMode(5, INPUT_PULLUP);
-  pinMode(6, INPUT_PULLUP);
-  pinMode(7, INPUT_PULLUP);
-  pinMode(8, INPUT_PULLUP);
-  pinMode(9, INPUT_PULLUP);
-  
-  pinMode(A0, INPUT_PULLUP);
-  pinMode(A1, INPUT_PULLUP);
-  pinMode(A2, INPUT_PULLUP);
-  pinMode(A3, INPUT_PULLUP);
-  
-
-  pinMode(LED_LAN_RDY, OUTPUT);
-  pinMode(LED_LAN_ROOCESSING, OUTPUT);
-  
-  // LED test
-  delay(200);
-  digitalWrite(LED_LAN_RDY, HIGH);
-  delay(200);
-  digitalWrite(LED_LAN_RDY, LOW);
-  digitalWrite(LED_LAN_ROOCESSING, HIGH);
-  delay(200);
-  digitalWrite(LED_LAN_ROOCESSING, LOW);
-  digitalWrite(LED_LAN_RDY, LOW);
-  
-  
-  
-  
-  
   
   if (EEPROM.read(1) != '#') {
     Serial.println(F("\nWriting EEProm..."));
@@ -147,7 +86,7 @@ void setup () {
       mymac[i] = EEPROM.read(i);
   }
   
-Serial.print("MAC: ");
+  Serial.print("MAC: ");
   for (int i = 0; i < 6; i++) {
     Serial.print(mymac[i], HEX);
         if (i<5)
@@ -182,37 +121,14 @@ Serial.print("MAC: ");
   
  
   
-  heartbeat=0;
-  
-  a = "?mac=" + String(mymac[0], HEX) + ":" + String(mymac[1], HEX) + ":" + String(mymac[2], HEX) + 
+  a = String(mymac[0], HEX) + ":" + String(mymac[1], HEX) + ":" + String(mymac[2], HEX) + 
   ":" + String(mymac[3], HEX) + ":" +String( mymac[4], HEX) + ":" + String(mymac[5], HEX);
-  
-  digitalWrite(LED_LAN_RDY, HIGH);
-  // t.every(1000, takeReading); 
 
 }
 
-bool foo;
-void blinkLED() {
-  foo=!foo;
-  if (foo)
-    digitalWrite(LED_LAN_RDY,HIGH);
-  else
-    digitalWrite(LED_LAN_RDY,LOW);
-  
-}
 
 
-
-
-int MAX_HEARTBEAT=200;
-
-
-char b[150];
-String d;
 void loop () {
-  
-  
   
   ether.packetLoop(ether.packetReceive());
   if (millis() > timer) {
@@ -223,7 +139,11 @@ void loop () {
     
     
     char tosend[100];
-    sprintf(tosend,"?millis=%d", timer);
+   
+   Serial.println("aaah");
+    Serial.println(a);
+  
+    sprintf(tosend, "?millis=%d&mac=%s", timer, a.c_str());
     
     char str_temp[6];
     
@@ -256,7 +176,7 @@ void loop () {
     
     Serial.print("/temperatures.php");
     Serial.write(tosend);
-    Serial.println(d);
+    
   }
 }
 
