@@ -133,7 +133,7 @@ void loop () {
     
     
     char tosend[100];
-    sprintf(tosend, "?millis=%d&mac=%02X:%02X:%02X:%02X:%02X:%02X", timer, mymac[0], mymac[1], mymac[2], mymac[3], mymac[4], mymac[5]);
+    sprintf(tosend, "?millis=1&mac=%02X:%02X:%02X:%02X:%02X:%02X", mymac[0], mymac[1], mymac[2], mymac[3], mymac[4], mymac[5]);
     
     char str_temp[6];
     
